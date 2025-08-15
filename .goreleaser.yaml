@@ -11,10 +11,10 @@ builds:
       - -tags=netgo
     ldflags:
       - "-s -w"
-      - "-X github.com/stacklok/toolhive/pkg/versions.Version={{ .Env.VERSION }}"
-      - "-X github.com/stacklok/toolhive/pkg/versions.Commit={{ .Env.COMMIT }}"
-      - "-X github.com/stacklok/toolhive/pkg/versions.BuildDate={{ .Date }}"
-      - "-X github.com/stacklok/toolhive/pkg/versions.BuildType=release"
+      - "-X github.com/liamstorkey-elmo/toolhive/pkg/versions.Version={{ .Env.VERSION }}"
+      - "-X github.com/liamstorkey-elmo/toolhive/pkg/versions.Commit={{ .Env.COMMIT }}"
+      - "-X github.com/liamstorkey-elmo/toolhive/pkg/versions.BuildDate={{ .Date }}"
+      - "-X github.com/liamstorkey-elmo/toolhive/pkg/versions.BuildType=release"
     goos:
       - linux
       - windows
@@ -34,15 +34,15 @@ archives:
 # This section defines how to release to winget.
 winget:
  - name: thv
-   publisher: stacklok
+   publisher: liamstorkey-elmo
    license: Apache-2.0
-   license_url: "https://github.com/stacklok/toolhive/blob/main/LICENSE"
-   copyright: Stacklok, Inc.
-   homepage: https://stacklok.com
+   license_url: "https://github.com/liamstorkey-elmo/toolhive/blob/main/LICENSE"
+   copyright: liamstorkey-elmo, Inc.
+   homepage: https://liamstorkey-elmo.com
    short_description: 'ToolHive is a lightweight, secure, and fast manager for MCP (Model Context Protocol) servers'
-   publisher_support_url: "https://github.com/stacklok/toolhive/issues/new/choose"
-   package_identifier: "stacklok.thv"
-   url_template: "https://github.com/stacklok/toolhive/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+   publisher_support_url: "https://github.com/liamstorkey-elmo/toolhive/issues/new/choose"
+   package_identifier: "liamstorkey-elmo.thv"
+   url_template: "https://github.com/liamstorkey-elmo/toolhive/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
    skip_upload: auto
    release_notes: "{{.Changelog}}"
    tags:
@@ -50,15 +50,15 @@ winget:
      - cli
      - mcp
      - toolhive
-     - stacklok
+     - liamstorkey-elmo
      - model-context-protocol
      - mcp-server
    commit_author:
-     name: stacklokbot
-     email: info@stacklok.com
+     name: liamstorkey-elmobot
+     email: info@liamstorkey-elmo.com
    goamd64: v1
    repository:
-     owner: stacklok
+     owner: liamstorkey-elmo
      name: winget-pkgs
      branch: "thv-{{.Version}}"
      token: "{{ .Env.WINGET_GITHUB_TOKEN }}"
@@ -72,14 +72,14 @@ winget:
 # This section defines how to release to homebrew.
 brews:
   - name: thv
-    homepage: 'https://github.com/stacklok/toolhive'
+    homepage: 'https://github.com/liamstorkey-elmo/toolhive'
     description: 'ToolHive (thv) is a lightweight, secure, and fast manager for MCP (Model Context Protocol) servers'
     directory: Formula
     commit_author:
-      name: stacklokbot
-      email: info@stacklok.com
+      name: liamstorkey-elmobot
+      email: info@liamstorkey-elmo.com
     repository:
-      owner: stacklok
+      owner: liamstorkey-elmo
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     test: |
@@ -97,7 +97,7 @@ sboms:
 # This section defines the release policy.
 release:
   github:
-    owner: stacklok
+    owner: liamstorkey-elmo
     name: toolhive
 # This section defines how and which artifacts we want to sign for the release.
 signs:
