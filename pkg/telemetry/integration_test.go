@@ -9,6 +9,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stacklok/toolhive/pkg/mcp"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
@@ -16,8 +17,6 @@ import (
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	"go.opentelemetry.io/otel/sdk/trace/tracetest"
 	tracenoop "go.opentelemetry.io/otel/trace/noop"
-
-	"github.com/stacklok/toolhive/pkg/mcp"
 )
 
 func TestTelemetryIntegration_EndToEnd(t *testing.T) {

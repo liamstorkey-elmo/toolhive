@@ -11,7 +11,6 @@ import (
 
 	"github.com/adrg/xdg"
 	"github.com/gofrs/flock"
-
 	"github.com/stacklok/toolhive/pkg/logger"
 )
 

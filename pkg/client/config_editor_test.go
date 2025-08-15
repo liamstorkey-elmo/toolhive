@@ -9,10 +9,9 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
+	"github.com/stacklok/toolhive/pkg/logger"
 	"github.com/tidwall/gjson"
 	"gotest.tools/assert"
-
-	"github.com/stacklok/toolhive/pkg/logger"
 )
 
 func TestUpsertMCPServerConfig(t *testing.T) {

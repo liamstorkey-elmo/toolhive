@@ -11,12 +11,11 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/tailscale/hujson"
-
 	"github.com/stacklok/toolhive/pkg/logger"
 	"github.com/stacklok/toolhive/pkg/transport/ssecommon"
 	"github.com/stacklok/toolhive/pkg/transport/streamable"
 	"github.com/stacklok/toolhive/pkg/transport/types"
+	"github.com/tailscale/hujson"
 )
 
 // lockTimeout is the maximum time to wait for a file lock

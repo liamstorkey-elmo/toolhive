@@ -11,7 +11,6 @@ import (
 	"github.com/google/go-containerregistry/pkg/v1/remote"
 	containerdigest "github.com/opencontainers/go-digest"
 	"github.com/sigstore/sigstore-go/pkg/bundle"
-
 	"github.com/stacklok/toolhive/pkg/logger"
 )
 

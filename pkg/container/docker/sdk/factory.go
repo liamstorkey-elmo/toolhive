@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	"github.com/docker/docker/client"
-
 	"github.com/stacklok/toolhive/pkg/container/runtime"
 	"github.com/stacklok/toolhive/pkg/logger"
 )

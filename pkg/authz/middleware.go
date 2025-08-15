@@ -7,10 +7,9 @@ import (
 	"net/http"
 	"strings"
 
-	"golang.org/x/exp/jsonrpc2"
-
 	"github.com/stacklok/toolhive/pkg/mcp"
 	"github.com/stacklok/toolhive/pkg/transport/ssecommon"
+	"golang.org/x/exp/jsonrpc2"
 )
 
 // MCPMethodToFeatureOperation maps MCP method names to feature and operation pairs.

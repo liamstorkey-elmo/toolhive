@@ -5,9 +5,8 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"golang.org/x/sync/errgroup"
-
 	"github.com/stacklok/toolhive/pkg/workloads"
+	"golang.org/x/sync/errgroup"
 )
 
 var (

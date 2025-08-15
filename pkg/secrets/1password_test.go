@@ -6,11 +6,10 @@ import (
 	"testing"
 
 	"github.com/1password/onepassword-sdk-go"
-	"github.com/stretchr/testify/assert"
-	"go.uber.org/mock/gomock"
-
 	"github.com/stacklok/toolhive/pkg/secrets"
 	cm "github.com/stacklok/toolhive/pkg/secrets/clients/mocks"
+	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
 )
 
 func TestNewOnePasswordManager(t *testing.T) {

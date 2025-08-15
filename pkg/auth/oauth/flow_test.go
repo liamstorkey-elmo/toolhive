@@ -14,11 +14,10 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/stacklok/toolhive/pkg/logger"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/oauth2"
-
-	"github.com/stacklok/toolhive/pkg/logger"
 )
 
 func TestMain(m *testing.M) {

@@ -5,12 +5,11 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/stacklok/toolhive/pkg/logger"
+	"github.com/stacklok/toolhive/pkg/secrets"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"
-
-	"github.com/stacklok/toolhive/pkg/logger"
-	"github.com/stacklok/toolhive/pkg/secrets"
 )
 
 // SetupTestConfig creates a temporary config file and returns the config path

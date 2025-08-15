@@ -9,9 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
-
 	"github.com/stacklok/toolhive/pkg/logger"
+	"github.com/stretchr/testify/assert"
 )
 
 func init() {

@@ -15,8 +15,6 @@ import (
 	"time"
 
 	"github.com/adrg/xdg"
-	"golang.org/x/sync/errgroup"
-
 	"github.com/stacklok/toolhive/pkg/client"
 	"github.com/stacklok/toolhive/pkg/config"
 	ct "github.com/stacklok/toolhive/pkg/container"
@@ -28,6 +26,7 @@ import (
 	"github.com/stacklok/toolhive/pkg/runner"
 	"github.com/stacklok/toolhive/pkg/secrets"
 	"github.com/stacklok/toolhive/pkg/transport/proxy"
+	"golang.org/x/sync/errgroup"
 )
 
 // Manager is responsible for managing the state of ToolHive-managed containers.

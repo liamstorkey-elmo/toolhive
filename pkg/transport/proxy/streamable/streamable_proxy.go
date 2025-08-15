@@ -10,10 +10,9 @@ import (
 	"net/http"
 	"time"
 
-	"golang.org/x/exp/jsonrpc2"
-
 	"github.com/stacklok/toolhive/pkg/logger"
 	"github.com/stacklok/toolhive/pkg/transport/types"
+	"golang.org/x/exp/jsonrpc2"
 )
 
 const (

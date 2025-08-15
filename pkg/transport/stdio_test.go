@@ -5,11 +5,10 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/stacklok/toolhive/pkg/logger"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"golang.org/x/exp/jsonrpc2"
-
-	"github.com/stacklok/toolhive/pkg/logger"
 )
 
 // MockHTTPProxy is a mock implementation of types.Proxy

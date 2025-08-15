@@ -9,9 +9,8 @@ import (
 	"os"
 	"path"
 
-	"golang.org/x/sync/syncmap"
-
 	"github.com/stacklok/toolhive/pkg/secrets/aes"
+	"golang.org/x/sync/syncmap"
 )
 
 // EncryptedManager stores secrets in an encrypted file.

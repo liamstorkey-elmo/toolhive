@@ -10,11 +10,10 @@ import (
 	"os"
 
 	"github.com/adrg/xdg"
-	"github.com/zalando/go-keyring"
-	"golang.org/x/term"
-
 	"github.com/stacklok/toolhive/pkg/logger"
 	"github.com/stacklok/toolhive/pkg/process"
+	"github.com/zalando/go-keyring"
+	"golang.org/x/term"
 )
 
 const (

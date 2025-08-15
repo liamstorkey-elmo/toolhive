@@ -10,7 +10,6 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/cobra/doc"
-
 	cli "github.com/stacklok/toolhive/cmd/thv/app"
 )
 

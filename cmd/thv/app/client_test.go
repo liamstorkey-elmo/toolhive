@@ -7,9 +7,8 @@ import (
 	"testing"
 
 	"github.com/spf13/cobra"
-	"github.com/stretchr/testify/assert"
-
 	"github.com/stacklok/toolhive/pkg/config"
+	"github.com/stretchr/testify/assert"
 )
 
 func registerClientViaCLI(cmd *cobra.Command, client string) error {

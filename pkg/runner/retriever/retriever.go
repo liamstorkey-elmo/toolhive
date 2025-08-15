@@ -7,7 +7,6 @@ import (
 	"fmt"
 
 	nameref "github.com/google/go-containerregistry/pkg/name"
-
 	"github.com/stacklok/toolhive/pkg/config"
 	"github.com/stacklok/toolhive/pkg/container/images"
 	"github.com/stacklok/toolhive/pkg/container/verifier"

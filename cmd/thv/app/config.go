@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-
 	"github.com/stacklok/toolhive/pkg/certs"
 	"github.com/stacklok/toolhive/pkg/config"
 	"github.com/stacklok/toolhive/pkg/networking"
@@ -127,6 +126,11 @@ func init() {
 	)
 	configCmd.AddCommand(getRegistryURLCmd)
 	configCmd.AddCommand(unsetRegistryURLCmd)
+
+	// Temporary deprecated aliases (to be removed soon)
+	// Keep these wired so the variables are used and the commands remain available for a short period
+	configCmd.AddCommand(registerClientCmd)
+	configCmd.AddCommand(removeClientCmd)
 
 	// Add OTEL parent command to config
 	configCmd.AddCommand(OtelCmd)

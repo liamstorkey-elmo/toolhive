@@ -6,12 +6,11 @@ import (
 	"os"
 	"strings"
 
-	"golang.org/x/term"
-
 	"github.com/stacklok/toolhive/pkg/config"
 	"github.com/stacklok/toolhive/pkg/logger"
 	"github.com/stacklok/toolhive/pkg/registry"
 	"github.com/stacklok/toolhive/pkg/secrets"
+	"golang.org/x/term"
 )
 
 // EnvVarValidator defines the interface for checking that the expected

@@ -7,10 +7,9 @@ import (
 	"testing"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/stacklok/toolhive/pkg/logger"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-
-	"github.com/stacklok/toolhive/pkg/logger"
 )
 
 func TestGetClaimsFromContext(t *testing.T) {
