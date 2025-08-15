@@ -118,6 +118,12 @@ type RunConfig struct {
 
 	// JWKSAllowPrivateIP allows JWKS/OIDC endpoints on private IP addresses
 	JWKSAllowPrivateIP bool `json:"jwks_allow_private_ip,omitempty" yaml:"jwks_allow_private_ip,omitempty"`
+
+	// Group is the name of the group this workload belongs to, if any
+	Group string `json:"group,omitempty" yaml:"group,omitempty"`
+
+	// ToolsFilter is the list of tools to filter
+	ToolsFilter []string `json:"tools_filter,omitempty" yaml:"tools_filter,omitempty"`
 }
 
 // WriteJSON serializes the RunConfig to JSON and writes it to the provided writer
@@ -186,6 +192,8 @@ func NewRunConfigFromFlags(
 	jwksAllowPrivateIP bool,
 	envVarValidator EnvVarValidator,
 	proxyMode types.ProxyMode,
+	groupName string,
+	toolsFilter []string,
 ) (*RunConfig, error) {
 	return NewRunConfigBuilder().
 		WithRuntime(runtime).
@@ -206,10 +214,12 @@ func NewRunConfigFromFlags(
 		WithTransportAndPorts(mcpTransport, port, targetPort).
 		WithAuditEnabled(enableAudit, auditConfigPath).
 		WithLabels(runLabels).
+		WithGroup(groupName).
 		WithOIDCConfig(oidcIssuer, oidcAudience, oidcJwksURL, oidcClientID, oidcAllowOpaqueTokens,
 			thvCABundle, jwksAuthTokenFile, jwksAllowPrivateIP).
 		WithTelemetryConfig(otelEndpoint, otelEnablePrometheusMetricsPath, otelServiceName,
 			otelSamplingRate, otelHeaders, otelInsecure, otelEnvironmentVariables).
+		WithToolsFilter(toolsFilter).
 		Build(ctx, imageMetadata, envVars, envVarValidator)
 }
 
@@ -356,6 +366,7 @@ func (c *RunConfig) WithStandardLabels() *RunConfig {
 	if c.Transport == types.TransportTypeStdio && c.ProxyMode == types.ProxyModeStreamableHTTP {
 		transportLabel = types.TransportTypeStreamableHTTP.String()
 	}
+	// Use the Group field from the RunConfig
 	labels.AddStandardLabels(c.ContainerLabels, containerName, c.BaseName, transportLabel, c.Port)
 	return c
 }

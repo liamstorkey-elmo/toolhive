@@ -9,6 +9,7 @@ import (
 	"maps"
 	"os"
 	"reflect"
+	"slices"
 	"strings"
 	"time"
 
@@ -387,7 +388,7 @@ func (r *MCPServerReconciler) deploymentForMCPServer(m *mcpv1alpha1.MCPServer) *
 
 	// Prepare container args
 	args := []string{"run", "--foreground=true"}
-	args = append(args, fmt.Sprintf("--port=%d", m.Spec.Port))
+	args = append(args, fmt.Sprintf("--proxy-port=%d", m.Spec.Port))
 	args = append(args, fmt.Sprintf("--name=%s", m.Name))
 	args = append(args, fmt.Sprintf("--transport=%s", m.Spec.Transport))
 	args = append(args, fmt.Sprintf("--host=%s", getProxyHost()))
@@ -438,6 +439,12 @@ func (r *MCPServerReconciler) deploymentForMCPServer(m *mcpv1alpha1.MCPServer) *
 	// Add environment variables as --env flags for the MCP server
 	for _, e := range m.Spec.Env {
 		args = append(args, fmt.Sprintf("--env=%s=%s", e.Name, e.Value))
+	}
+
+	// Add tools filter args
+	if len(m.Spec.ToolsFilter) > 0 {
+		slices.Sort(m.Spec.ToolsFilter)
+		args = append(args, fmt.Sprintf("--tools=%s", strings.Join(m.Spec.ToolsFilter, ",")))
 	}
 
 	// Add the image
@@ -780,7 +787,7 @@ func deploymentNeedsUpdate(deployment *appsv1.Deployment, mcpServer *mcpv1alpha1
 		}
 
 		// Check if the port has changed
-		portArg := fmt.Sprintf("--port=%d", mcpServer.Spec.Port)
+		portArg := fmt.Sprintf("--proxy-port=%d", mcpServer.Spec.Port)
 		found = false
 		for _, arg := range container.Args {
 			if arg == portArg {
@@ -803,6 +810,22 @@ func deploymentNeedsUpdate(deployment *appsv1.Deployment, mcpServer *mcpv1alpha1
 		}
 		if !found {
 			return true
+		}
+
+		// Check if the tools filter has changed
+		if mcpServer.Spec.ToolsFilter == nil {
+			for _, arg := range container.Args {
+				if strings.HasPrefix(arg, "--tools=") {
+					return true
+				}
+			}
+		} else {
+			slices.Sort(mcpServer.Spec.ToolsFilter)
+			toolsFilterArg := fmt.Sprintf("--tools=%s", strings.Join(mcpServer.Spec.ToolsFilter, ","))
+			found = slices.Contains(container.Args, toolsFilterArg)
+			if !found {
+				return true
+			}
 		}
 
 		// Check if the pod template spec has changed
@@ -1139,7 +1162,7 @@ func getToolhiveRunnerImage() string {
 	image := os.Getenv("TOOLHIVE_RUNNER_IMAGE")
 	if image == "" {
 		// Default to the published image
-		image = "ghcr.io/stacklok/toolhive:latest"
+		image = "ghcr.io/stacklok/toolhive/proxyrunner:latest"
 	}
 	return image
 }

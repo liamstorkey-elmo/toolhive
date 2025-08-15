@@ -3,6 +3,7 @@ package runner
 import (
 	"context"
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/stacklok/toolhive/pkg/audit"
@@ -146,6 +147,12 @@ func (b *RunConfigBuilder) WithProxyMode(mode types.ProxyMode) *RunConfigBuilder
 	return b
 }
 
+// WithGroup sets the group name for the workload
+func (b *RunConfigBuilder) WithGroup(groupName string) *RunConfigBuilder {
+	b.config.Group = groupName
+	return b
+}
+
 // WithLabels sets custom labels from command-line flags
 func (b *RunConfigBuilder) WithLabels(labelStrings []string) *RunConfigBuilder {
 	if len(labelStrings) == 0 {
@@ -256,6 +263,12 @@ func (b *RunConfigBuilder) WithTelemetryConfig(otelEndpoint string, otelEnablePr
 		EnablePrometheusMetricsPath: otelEnablePrometheusMetricsPath,
 		EnvironmentVariables:        processedEnvVars,
 	}
+	return b
+}
+
+// WithToolsFilter sets the tools filter
+func (b *RunConfigBuilder) WithToolsFilter(toolsFilter []string) *RunConfigBuilder {
+	b.config.ToolsFilter = toolsFilter
 	return b
 }
 
@@ -374,6 +387,15 @@ func (b *RunConfigBuilder) validateConfig(imageMetadata *registry.ImageMetadata)
 	if imageMetadata != nil && len(imageMetadata.Args) > 0 {
 		logger.Debugf("Prepending registry args: %v", imageMetadata.Args)
 		c.CmdArgs = append(c.CmdArgs, imageMetadata.Args...)
+	}
+
+	if c.ToolsFilter != nil && imageMetadata != nil && imageMetadata.Tools != nil {
+		logger.Debugf("Using tools filter: %v", c.ToolsFilter)
+		for _, tool := range c.ToolsFilter {
+			if !slices.Contains(imageMetadata.Tools, tool) {
+				return fmt.Errorf("tool %s not found in registry", tool)
+			}
+		}
 	}
 
 	return nil

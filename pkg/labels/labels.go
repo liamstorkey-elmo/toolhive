@@ -33,13 +33,15 @@ const (
 	// LabelNetworkIsolation indicates that the network isolation functionality is enabled.
 	LabelNetworkIsolation = "toolhive-network-isolation"
 
+	// LabelGroup is the label that contains the group name
+	LabelGroup = "toolhive-group"
+
 	// LabelToolHiveValue is the value for the LabelToolHive label
 	LabelToolHiveValue = "true"
 )
 
 // AddStandardLabels adds standard labels to a container
 func AddStandardLabels(labels map[string]string, containerName, containerBaseName, transportType string, port int) {
-	// Add standard labels
 	labels[LabelToolHive] = LabelToolHiveValue
 	labels[LabelName] = containerName
 	labels[LabelBaseName] = containerBaseName
@@ -114,6 +116,16 @@ func GetPort(labels map[string]string) (int, error) {
 // GetToolType gets the tool type from labels
 func GetToolType(labels map[string]string) string {
 	return labels[LabelToolType]
+}
+
+// GetGroup gets the group name from labels
+func GetGroup(labels map[string]string) string {
+	return labels[LabelGroup]
+}
+
+// SetGroup sets the group name in labels
+func SetGroup(labels map[string]string, groupName string) {
+	labels[LabelGroup] = groupName
 }
 
 // IsStandardToolHiveLabel checks if a label key is a standard ToolHive label

@@ -44,6 +44,21 @@ func TestAddStandardLabels(t *testing.T) {
 				LabelToolType:  "mcp",
 			},
 		},
+		{
+			name:              "With group",
+			containerName:     "group-container",
+			containerBaseName: "group-base",
+			transportType:     "sse",
+			port:              7070,
+			expected: map[string]string{
+				LabelToolHive:  "true",
+				LabelName:      "group-container",
+				LabelBaseName:  "group-base",
+				LabelTransport: "sse",
+				LabelPort:      "7070",
+				LabelToolType:  "mcp",
+			},
+		},
 	}
 
 	for _, tc := range tests {

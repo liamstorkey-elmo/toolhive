@@ -46,7 +46,7 @@ var (
 	runTransport          string
 	runName               string
 	runHost               string
-	runPort               int
+	runProxyPort          int
 	runTargetPort         int
 	runPermissionProfile  string
 	runEnv                []string
@@ -74,16 +74,16 @@ var (
 
 	// Network isolation flag
 	runIsolateNetwork bool
+
+	// Tools filter
+	runToolsFilter []string
 )
 
 func init() {
 	runCmd.Flags().StringVar(&runTransport, "transport", "", "Transport mode (sse, streamable-http or stdio)")
 	runCmd.Flags().StringVar(&runName, "name", "", "Name of the MCP server (auto-generated from image if not provided)")
-	runCmd.Flags().IntVar(&runPort, "port", 0, "Port for the HTTP proxy to listen on (host port)")
+	runCmd.Flags().IntVar(&runProxyPort, "proxy-port", 0, "Port for the HTTP proxy to listen on (host port)")
 	runCmd.Flags().StringVar(&runHost, "host", transport.LocalhostIPv4, "Host for the HTTP proxy to listen on (IP or hostname)")
-	if err := runCmd.Flags().MarkDeprecated("port", "use --proxy-port instead"); err != nil {
-		logger.Warnf("Error marking port flag as deprecated: %v", err)
-	}
 	runCmd.Flags().IntVar(&runTargetPort, "target-port", 0,
 		"Port for the container to expose (only applicable to SSE or Streamable HTTP transport)")
 	runCmd.Flags().StringVar(
@@ -179,7 +179,12 @@ func init() {
 		"Enable Prometheus-style /metrics endpoint on the main transport port")
 	runCmd.Flags().BoolVar(&runIsolateNetwork, "isolate-network", false,
 		"Isolate the container network from the host (default: false)")
-
+	runCmd.Flags().StringArrayVar(
+		&runToolsFilter,
+		"tools",
+		nil,
+		"Filter MCP server tools (comma-separated list of tool names)",
+	)
 }
 
 func runCmdFunc(cmd *cobra.Command, args []string) error {
@@ -223,12 +228,6 @@ func runCmdFunc(cmd *cobra.Command, args []string) error {
 
 	var imageMetadata *registry.ImageMetadata
 
-	// Determine effective port value
-	effectivePort := 0
-	if runPort != 0 {
-		effectivePort = runPort
-	}
-
 	// Initialize a new RunConfig with values from command-line flags
 	runConfig, err := runner.NewRunConfigBuilder().
 		WithRuntime(rt).
@@ -246,12 +245,13 @@ func runCmdFunc(cmd *cobra.Command, args []string) error {
 		WithNetworkIsolation(runIsolateNetwork).
 		WithK8sPodPatch(runK8sPodPatch).
 		WithProxyMode(types.ProxyMode("sse")).
-		WithTransportAndPorts(runTransport, effectivePort, runTargetPort).
+		WithTransportAndPorts(runTransport, runProxyPort, runTargetPort).
 		WithAuditEnabled(runEnableAudit, runAuditConfig).
 		WithOIDCConfig(oidcIssuer, oidcAudience, oidcJwksURL, oidcClientID, oidcAllowOpaqueTokens,
 			runThvCABundle, runJWKSAuthTokenFile, runJWKSAllowPrivateIP).
 		WithTelemetryConfig(finalOtelEndpoint, runOtelEnablePrometheusMetricsPath, runOtelServiceName,
 			finalOtelSamplingRate, runOtelHeaders, runOtelInsecure, finalOtelEnvironmentVariables).
+		WithToolsFilter(runToolsFilter).
 		Build(ctx, imageMetadata, runEnv, envVarValidator)
 	if err != nil {
 		return fmt.Errorf("failed to create RunConfig: %v", err)

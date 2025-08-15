@@ -21,6 +21,7 @@ import (
 	"github.com/stacklok/toolhive/pkg/config"
 	ct "github.com/stacklok/toolhive/pkg/container"
 	rt "github.com/stacklok/toolhive/pkg/container/runtime"
+	"github.com/stacklok/toolhive/pkg/groups"
 	"github.com/stacklok/toolhive/pkg/labels"
 	"github.com/stacklok/toolhive/pkg/logger"
 	"github.com/stacklok/toolhive/pkg/process"
@@ -32,6 +33,8 @@ import (
 // Manager is responsible for managing the state of ToolHive-managed containers.
 // NOTE: This interface may be split up in future PRs, in particular, operations
 // which are only relevant to the CLI/API use case will be split out.
+//
+//go:generate mockgen -destination=mocks/mock_manager.go -package=mocks -source=manager.go Manager
 type Manager interface {
 	// GetWorkload retrieves details of the named workload including its status.
 	GetWorkload(ctx context.Context, workloadName string) (Workload, error)
@@ -54,6 +57,8 @@ type Manager interface {
 	RestartWorkloads(ctx context.Context, names []string) (*errgroup.Group, error)
 	// GetLogs retrieves the logs of a container.
 	GetLogs(ctx context.Context, containerName string, follow bool) (string, error)
+	// MoveToDefaultGroup moves the specified workloads to the default group by updating the runconfig.
+	MoveToDefaultGroup(ctx context.Context, workloadNames []string, groupName string) error
 }
 
 type defaultManager struct {
@@ -186,6 +191,10 @@ func (d *defaultManager) StopWorkloads(ctx context.Context, names []string) (*er
 		if err := validateWorkloadName(name); err != nil {
 			return nil, fmt.Errorf("invalid workload name '%s': %w", name, err)
 		}
+		// Ensure workload name does not contain path traversal or separators
+		if strings.Contains(name, "..") || strings.ContainsAny(name, "/\\") {
+			return nil, fmt.Errorf("invalid workload name '%s': contains forbidden characters", name)
+		}
 	}
 
 	// Find all containers first
@@ -315,12 +324,17 @@ func (d *defaultManager) RunWorkloadDetached(ctx context.Context, runConfig *run
 		detachedArgs = append(detachedArgs, "--name", runConfig.ContainerName)
 	}
 
+	// Add group if specified
+	if runConfig.Group != "" {
+		detachedArgs = append(detachedArgs, "--group", runConfig.Group)
+	}
+
 	if runConfig.Host != "" {
 		detachedArgs = append(detachedArgs, "--host", runConfig.Host)
 	}
 
 	if runConfig.Port != 0 {
-		detachedArgs = append(detachedArgs, "--port", strconv.Itoa(runConfig.Port))
+		detachedArgs = append(detachedArgs, "--proxy-port", strconv.Itoa(runConfig.Port))
 	}
 
 	if runConfig.TargetPort != 0 {
@@ -422,6 +436,11 @@ func (d *defaultManager) RunWorkloadDetached(ctx context.Context, runConfig *run
 		detachedArgs = append(detachedArgs, "--enable-audit")
 	}
 
+	if runConfig.ToolsFilter != nil {
+		toolsFilter := strings.Join(runConfig.ToolsFilter, ",")
+		detachedArgs = append(detachedArgs, "--tools", toolsFilter)
+	}
+
 	// Add the image and any arguments
 	detachedArgs = append(detachedArgs, runConfig.Image)
 	if len(runConfig.CmdArgs) > 0 {
@@ -503,7 +522,6 @@ func (d *defaultManager) GetLogs(ctx context.Context, containerName string, foll
 	return logs, nil
 }
 
-// DeleteWorkloads deletes the specified workloads by name.
 func (d *defaultManager) DeleteWorkloads(ctx context.Context, names []string) (*errgroup.Group, error) {
 	// Validate all workload names to prevent path traversal attacks
 	for _, name := range names {
@@ -864,6 +882,41 @@ func validateWorkloadName(name string) error {
 	// Reasonable length limit
 	if len(name) > 100 {
 		return fmt.Errorf("%w: workload name too long (max 100 characters)", ErrInvalidWorkloadName)
+	}
+
+	return nil
+}
+
+// RemoveFromGroup removes the specified workloads from the given group by updating the runconfig.
+func (d *defaultManager) MoveToDefaultGroup(ctx context.Context, workloadNames []string, groupName string) error {
+	for _, workloadName := range workloadNames {
+		// Validate workload name
+		if err := validateWorkloadName(workloadName); err != nil {
+			return fmt.Errorf("invalid workload name %s: %w", workloadName, err)
+		}
+
+		// Load the runner state to check and update the configuration
+		runnerInstance, err := d.loadRunnerFromState(ctx, workloadName)
+		if err != nil {
+			return fmt.Errorf("failed to load runner state for workload %s: %w", workloadName, err)
+		}
+
+		// Check if the workload is actually in the specified group
+		if runnerInstance.Config.Group != groupName {
+			logger.Debugf("Workload %s is not in group %s (current group: %s), skipping",
+				workloadName, groupName, runnerInstance.Config.Group)
+			continue
+		}
+
+		// Move the workload to the default group
+		runnerInstance.Config.Group = groups.DefaultGroup
+
+		// Save the updated configuration
+		if err := runnerInstance.SaveState(ctx); err != nil {
+			return fmt.Errorf("failed to save updated configuration for workload %s: %w", workloadName, err)
+		}
+
+		logger.Infof("Moved workload %s to default group", workloadName)
 	}
 
 	return nil
