@@ -5,10 +5,9 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/stacklok/toolhive/pkg/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-
-	"github.com/stacklok/toolhive/pkg/config"
 )
 
 func TestGetClientStatus(t *testing.T) {

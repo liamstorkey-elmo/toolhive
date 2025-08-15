@@ -12,10 +12,9 @@ import (
 
 	"github.com/adrg/xdg"
 	"github.com/gofrs/flock"
-	"gopkg.in/yaml.v3"
-
 	"github.com/stacklok/toolhive/pkg/logger"
 	"github.com/stacklok/toolhive/pkg/secrets"
+	"gopkg.in/yaml.v3"
 )
 
 // lockTimeout is the maximum time to wait for a file lock

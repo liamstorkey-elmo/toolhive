@@ -17,10 +17,9 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/pkg/browser"
-	"golang.org/x/oauth2"
-
 	"github.com/stacklok/toolhive/pkg/logger"
 	"github.com/stacklok/toolhive/pkg/networking"
+	"golang.org/x/oauth2"
 )
 
 // Config contains configuration for OAuth authentication

@@ -9,6 +9,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stacklok/toolhive/pkg/mcp"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/attribute"
@@ -18,8 +19,6 @@ import (
 	"go.opentelemetry.io/otel/sdk/metric/metricdata"
 	"go.opentelemetry.io/otel/trace"
 	tracenoop "go.opentelemetry.io/otel/trace/noop"
-
-	"github.com/stacklok/toolhive/pkg/mcp"
 )
 
 func TestNewHTTPMiddleware(t *testing.T) {

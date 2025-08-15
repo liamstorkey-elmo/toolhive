@@ -9,9 +9,8 @@ import (
 	"net/http"
 	"strings"
 
-	"golang.org/x/exp/jsonrpc2"
-
 	"github.com/stacklok/toolhive/pkg/transport/ssecommon"
+	"golang.org/x/exp/jsonrpc2"
 )
 
 // contextKey is a type for context keys to avoid collisions.

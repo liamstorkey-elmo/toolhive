@@ -7,7 +7,6 @@ import (
 	"os/user"
 
 	"github.com/golang-jwt/jwt/v5"
-
 	"github.com/stacklok/toolhive/pkg/logger"
 )
 

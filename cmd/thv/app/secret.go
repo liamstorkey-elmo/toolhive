@@ -9,10 +9,9 @@ import (
 	"syscall"
 
 	"github.com/spf13/cobra"
-	"golang.org/x/term"
-
 	"github.com/stacklok/toolhive/pkg/config"
 	"github.com/stacklok/toolhive/pkg/secrets"
+	"golang.org/x/term"
 )
 
 func newSecretCommand() *cobra.Command {

@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-
 	rt "github.com/stacklok/toolhive/pkg/container/runtime"
 )
 

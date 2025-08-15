@@ -10,13 +10,12 @@ import (
 	"time"
 
 	"github.com/mark3labs/mcp-go/mcp"
+	mcpparser "github.com/stacklok/toolhive/pkg/mcp"
+	"github.com/stacklok/toolhive/pkg/transport/types"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/trace"
-
-	mcpparser "github.com/stacklok/toolhive/pkg/mcp"
-	"github.com/stacklok/toolhive/pkg/transport/types"
 )
 
 const (

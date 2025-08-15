@@ -3,9 +3,8 @@ package aes_test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
-
 	"github.com/stacklok/toolhive/pkg/secrets/aes"
+	"github.com/stretchr/testify/require"
 )
 
 func TestGCMEncrypt(t *testing.T) {

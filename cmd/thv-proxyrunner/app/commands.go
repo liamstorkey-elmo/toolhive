@@ -4,7 +4,6 @@ package app
 import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-
 	"github.com/stacklok/toolhive/pkg/logger"
 )
 

@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-
 	"github.com/stacklok/toolhive/pkg/versions"
 )
 

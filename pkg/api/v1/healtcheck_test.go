@@ -6,10 +6,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/stacklok/toolhive/pkg/container/runtime/mocks"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
-
-	"github.com/stacklok/toolhive/pkg/container/runtime/mocks"
 )
 
 func TestGetHealthcheck(t *testing.T) {

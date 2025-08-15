@@ -7,10 +7,9 @@ import (
 	"fmt"
 	"time"
 
-	"golang.org/x/exp/jsonrpc2"
-
 	"github.com/stacklok/toolhive/pkg/healthcheck"
 	"github.com/stacklok/toolhive/pkg/logger"
+	"golang.org/x/exp/jsonrpc2"
 )
 
 // MCPPinger implements healthcheck.MCPPinger for HTTP SSE proxies

@@ -6,7 +6,6 @@ import (
 	"os/signal"
 
 	"github.com/spf13/cobra"
-
 	s "github.com/stacklok/toolhive/pkg/api"
 	"github.com/stacklok/toolhive/pkg/auth"
 )

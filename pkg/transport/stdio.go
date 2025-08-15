@@ -11,8 +11,6 @@ import (
 	"time"
 	"unicode"
 
-	"golang.org/x/exp/jsonrpc2"
-
 	"github.com/stacklok/toolhive/pkg/container"
 	rt "github.com/stacklok/toolhive/pkg/container/runtime"
 	"github.com/stacklok/toolhive/pkg/logger"
@@ -21,6 +19,7 @@ import (
 	"github.com/stacklok/toolhive/pkg/transport/proxy/httpsse"
 	"github.com/stacklok/toolhive/pkg/transport/proxy/streamable"
 	"github.com/stacklok/toolhive/pkg/transport/types"
+	"golang.org/x/exp/jsonrpc2"
 )
 
 // StdioTransport implements the Transport interface using standard input/output.

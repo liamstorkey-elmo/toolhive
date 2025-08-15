@@ -13,7 +13,6 @@ import (
 	"github.com/docker/docker/api/types/filters"
 	dockerimage "github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/client"
-
 	"github.com/stacklok/toolhive/pkg/logger"
 )
 

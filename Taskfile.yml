@@ -71,8 +71,73 @@ tasks:
         sh: date -u +"%Y-%m-%dT%H:%M:%SZ"
     cmds:
       - mkdir -p bin
-      - go build -ldflags "-s -w -X github.com/stacklok/toolhive/pkg/versions.Version={{.VERSION}} -X github.com/stacklok/toolhive/pkg/versions.Commit={{.COMMIT}} -X github.com/stacklok/toolhive/pkg/versions.BuildDate={{.BUILD_DATE}}" -o bin/thv ./cmd/thv
+      - go build -ldflags "-s -w -X github.com/LiamStorkey/toolhive/pkg/versions.Version={{.VERSION}} -X github.com/LiamStorkey/toolhive/pkg/versions.Commit={{.COMMIT}} -X github.com/LiamStorkey/toolhive/pkg/versions.BuildDate={{.BUILD_DATE}}" -o bin/thv ./cmd/thv
 
+  build-release:
+    desc: Build release versions for all supported operating systems and architectures with archives and checksums
+    vars:
+      VERSION:
+        sh: git describe --tags --always --dirty --match "v*" || echo "dev"
+      COMMIT:
+        sh: git rev-parse --short HEAD || echo "unknown"
+      BUILD_DATE:
+        sh: date -u +"%Y-%m-%dT%H:%M:%SZ"
+      LDFLAGS: "-s -w -X github.com/LiamStorkey/toolhive/pkg/versions.Version={{.VERSION}} -X github.com/LiamStorkey/toolhive/pkg/versions.Commit={{.COMMIT}} -X github.com/LiamStorkey/toolhive/pkg/versions.BuildDate={{.BUILD_DATE}} -X github.com/LiamStorkey/toolhive/pkg/versions.BuildType=release"
+      BUILD_FLAGS: "-trimpath -tags=netgo"
+    env:
+      CGO_ENABLED: "0"
+      GO111MODULE: "on"
+    cmds:
+      - mkdir -p bin/release
+      - rm -f bin/release/*
+      
+      # Linux amd64
+      - mkdir -p bin/temp/toolhive_{{.VERSION}}_linux_amd64
+      - GOOS=linux GOARCH=amd64 go build {{.BUILD_FLAGS}} -ldflags "{{.LDFLAGS}}" -o bin/temp/toolhive_{{.VERSION}}_linux_amd64/thv ./cmd/thv
+      - tar -czf bin/release/toolhive_{{.VERSION}}_linux_amd64.tar.gz -C bin/temp toolhive_{{.VERSION}}_linux_amd64
+      
+      # Linux arm64
+      - mkdir -p bin/temp/toolhive_{{.VERSION}}_linux_arm64
+      - GOOS=linux GOARCH=arm64 go build {{.BUILD_FLAGS}} -ldflags "{{.LDFLAGS}}" -o bin/temp/toolhive_{{.VERSION}}_linux_arm64/thv ./cmd/thv
+      - tar -czf bin/release/toolhive_{{.VERSION}}_linux_arm64.tar.gz -C bin/temp toolhive_{{.VERSION}}_linux_arm64
+      
+      # Windows amd64
+      - mkdir -p bin/temp/toolhive_{{.VERSION}}_windows_amd64
+      - GOOS=windows GOARCH=amd64 go build {{.BUILD_FLAGS}} -ldflags "{{.LDFLAGS}}" -o bin/temp/toolhive_{{.VERSION}}_windows_amd64/thv.exe ./cmd/thv
+      - cd bin/temp && zip -r ../release/toolhive_{{.VERSION}}_windows_amd64.zip toolhive_{{.VERSION}}_windows_amd64
+      
+      # Windows arm64
+      - mkdir -p bin/temp/toolhive_{{.VERSION}}_windows_arm64
+      - GOOS=windows GOARCH=arm64 go build {{.BUILD_FLAGS}} -ldflags "{{.LDFLAGS}}" -o bin/temp/toolhive_{{.VERSION}}_windows_arm64/thv.exe ./cmd/thv
+      - cd bin/temp && zip -r ../release/toolhive_{{.VERSION}}_windows_arm64.zip toolhive_{{.VERSION}}_windows_arm64
+      
+      # macOS amd64
+      - mkdir -p bin/temp/toolhive_{{.VERSION}}_darwin_amd64
+      - GOOS=darwin GOARCH=amd64 go build {{.BUILD_FLAGS}} -ldflags "{{.LDFLAGS}}" -o bin/temp/toolhive_{{.VERSION}}_darwin_amd64/thv ./cmd/thv
+      - tar -czf bin/release/toolhive_{{.VERSION}}_darwin_amd64.tar.gz -C bin/temp toolhive_{{.VERSION}}_darwin_amd64
+      
+      # macOS arm64
+      - mkdir -p bin/temp/toolhive_{{.VERSION}}_darwin_arm64
+      - GOOS=darwin GOARCH=arm64 go build {{.BUILD_FLAGS}} -ldflags "{{.LDFLAGS}}" -o bin/temp/toolhive_{{.VERSION}}_darwin_arm64/thv ./cmd/thv
+      - tar -czf bin/release/toolhive_{{.VERSION}}_darwin_arm64.tar.gz -C bin/temp toolhive_{{.VERSION}}_darwin_arm64
+      
+      # Generate checksums
+      - cd bin/release && shasum -a 256 *.tar.gz *.zip > toolhive_{{.VERSION}}_checksums.txt
+      
+      # Create source archive (similar to GitHub's automatic source archives)
+      - git archive --format=tar.gz --prefix=toolhive-{{.VERSION}}/ HEAD > bin/release/toolhive_{{.VERSION}}_source.tar.gz
+      - git archive --format=zip --prefix=toolhive-{{.VERSION}}/ HEAD > bin/release/toolhive_{{.VERSION}}_source.zip
+      
+      # Cleanup temp directory
+      - rm -rf bin/temp
+      
+      # Display results
+      - echo "Release builds completed in bin/release/"
+      - echo "Generated {{.VERSION}} release assets:"
+      - ls -la bin/release/
+      - echo ""
+      - echo "Checksums:"
+      - cat bin/release/toolhive_{{.VERSION}}_checksums.txt
 
   install:
     desc: Install the thv binary to GOPATH/bin
@@ -84,7 +149,7 @@ tasks:
       BUILD_DATE:
         sh: date -u +"%Y-%m-%dT%H:%M:%SZ"
     cmds:
-      - go install -ldflags "-s -w -X github.com/stacklok/toolhive/pkg/versions.Version={{.VERSION}} -X github.com/stacklok/toolhive/pkg/versions.Commit={{.COMMIT}} -X github.com/stacklok/toolhive/pkg/versions.BuildDate={{.BUILD_DATE}}" -v ./cmd/thv
+      - go install -ldflags "-s -w -X github.com/LiamStorkey/toolhive/pkg/versions.Version={{.VERSION}} -X github.com/LiamStorkey/toolhive/pkg/versions.Commit={{.COMMIT}} -X github.com/LiamStorkey/toolhive/pkg/versions.BuildDate={{.BUILD_DATE}}" -v ./cmd/thv
 
   all:
     desc: Run linting, tests, and build

@@ -6,11 +6,10 @@ import (
 	"context"
 	"net/http"
 
-	"golang.org/x/exp/jsonrpc2"
-
 	rt "github.com/stacklok/toolhive/pkg/container/runtime"
 	"github.com/stacklok/toolhive/pkg/permissions"
 	"github.com/stacklok/toolhive/pkg/transport/errors"
+	"golang.org/x/exp/jsonrpc2"
 )
 
 // Middleware is a function that wraps an http.Handler with additional functionality.

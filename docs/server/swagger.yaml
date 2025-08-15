@@ -114,6 +114,7 @@ components:
       - VSCodeInsider
       - VSCode
       - ClaudeCode
+      - ClaudeDesktop
     client.MCPClientStatus:
       properties:
         client_type:
@@ -126,6 +127,7 @@ components:
           - VSCodeInsider
           - VSCode
           - ClaudeCode
+          - ClaudeDesktop
         installed:
           description: Installed indicates whether the client is installed on the
             system
@@ -551,6 +553,7 @@ components:
             - VSCodeInsider
             - VSCode
             - ClaudeCode
+            - ClaudeDesktop
           type: array
           uniqueItems: false
       type: object
@@ -584,6 +587,7 @@ components:
           - VSCodeInsider
           - VSCode
           - ClaudeCode
+          - ClaudeDesktop
       type: object
     v1.createClientResponse:
       properties:
@@ -597,6 +601,7 @@ components:
           - VSCodeInsider
           - VSCode
           - ClaudeCode
+          - ClaudeDesktop
       type: object
     v1.createRequest:
       description: Request to create a new workload
